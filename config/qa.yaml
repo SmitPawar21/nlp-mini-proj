@@ -1,0 +1,36 @@
+# ==============================================================================
+# Question Answering Task Configuration
+# ==============================================================================
+# Inherits from base.yaml — only overrides are specified here.
+
+task:
+  name: "qa"
+  type: "question_answering"
+  description: "Extractive QA on code-mixed Hindi-English text"
+
+# --- Dataset ---
+dataset:
+  name: "indicqa_hindi"
+  context_column: "context"
+  question_column: "question"
+  answer_column: "answers"
+  max_context_length: 384
+  max_question_length: 64
+  doc_stride: 128               # Stride for sliding window on long contexts
+
+# --- Model ---
+model:
+  backbone: "google/muril-base-cased"
+  dropout: 0.1
+
+# --- Training Overrides ---
+training:
+  num_epochs: 10
+  learning_rate: 3.0e-5
+  batch_size: 16
+
+# --- Evaluation ---
+evaluation:
+  metrics: ["exact_match", "f1"]
+  n_best_size: 20
+  max_answer_length: 30

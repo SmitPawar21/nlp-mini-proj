@@ -1,0 +1,35 @@
+# ==============================================================================
+# Sentiment Analysis Task Configuration
+# ==============================================================================
+# Inherits from base.yaml — only overrides are specified here.
+
+task:
+  name: "sentiment"
+  type: "classification"
+  description: "Sentiment classification of code-mixed Hindi-English text"
+
+# --- Dataset ---
+dataset:
+  name: "hingsent"
+  text_column: "text"
+  label_column: "label"
+  num_labels: 3                  # positive, negative, neutral
+  label_map:
+    0: "negative"
+    1: "neutral"
+    2: "positive"
+
+# --- Model ---
+model:
+  backbone: "google/muril-base-cased"
+  dropout: 0.1
+
+# --- Training Overrides ---
+training:
+  num_epochs: 10
+  learning_rate: 2.0e-5
+  batch_size: 32
+
+# --- Evaluation ---
+evaluation:
+  metrics: ["accuracy", "precision", "recall", "f1", "confusion_matrix"]

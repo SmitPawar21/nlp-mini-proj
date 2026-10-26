@@ -1,0 +1,41 @@
+# ==============================================================================
+# Named Entity Recognition Task Configuration
+# ==============================================================================
+# Inherits from base.yaml — only overrides are specified here.
+
+task:
+  name: "ner"
+  type: "token_classification"
+  description: "NER on code-mixed Hindi-English text using BIO tagging"
+
+# --- Dataset ---
+dataset:
+  name: "comi_lingua_ner"
+  tokens_column: "tokens"
+  tags_column: "ner_tags"
+  label_list:
+    - "O"
+    - "B-PER"
+    - "I-PER"
+    - "B-LOC"
+    - "I-LOC"
+    - "B-ORG"
+    - "I-ORG"
+    - "B-MISC"
+    - "I-MISC"
+
+# --- Model ---
+model:
+  backbone: "google/muril-base-cased"
+  dropout: 0.1
+
+# --- Training Overrides ---
+training:
+  num_epochs: 15
+  learning_rate: 3.0e-5
+  batch_size: 16
+
+# --- Evaluation ---
+evaluation:
+  metrics: ["entity_precision", "entity_recall", "entity_f1"]
+  scheme: "IOB2"

@@ -1,0 +1,38 @@
+# ==============================================================================
+# Translation Task Configuration
+# ==============================================================================
+# Inherits from base.yaml — only overrides are specified here.
+
+task:
+  name: "translation"
+  type: "seq2seq"
+  description: "Code-mixed Hindi-English to Hindi translation"
+
+# --- Dataset ---
+dataset:
+  name: "comi_lingua_mt"
+  source_column: "code_mixed_text"
+  target_column: "hindi_translation"
+  max_source_length: 256
+  max_target_length: 256
+
+# --- Model ---
+model:
+  backbone: "google/mt5-small"
+  generation:
+    num_beams: 4
+    max_new_tokens: 256
+    length_penalty: 1.0
+    no_repeat_ngram_size: 3
+
+# --- Training Overrides ---
+training:
+  batch_size: 8                  # Seq2seq needs more memory
+  eval_batch_size: 16
+  num_epochs: 15
+  learning_rate: 3.0e-5
+  label_smoothing_factor: 0.1
+
+# --- Evaluation ---
+evaluation:
+  metrics: ["bleu", "rouge", "qualitative"]

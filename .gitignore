@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data & Models (Do not upload large data files and model checkpoints)
+data/processed/
+/models/
+outputs/
+data/raw/
+data/COMI-LINGUA/*.csv
+
+# Virtual Environments
+venv/
+.env/
+env/
+ENV/
+
+# Agent configuration
+.agents/
+.claude/
+scratch/
+
+# OS specific
+.DS_Store
+Thumbs.db

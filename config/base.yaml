@@ -1,0 +1,90 @@
+# ==============================================================================
+# Base Configuration — Code-Mixed Language Understanding
+# ==============================================================================
+# This file contains shared hyperparameters and paths. Task-specific configs
+# inherit from this file and can override any value.
+
+# --- Project Paths ---
+project:
+  root_dir: "."
+  data_dir: "data"
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  model_dir: "models"
+  output_dir: "outputs"
+  log_dir: "logs"
+
+# --- Language Configuration ---
+# Designed for extensibility: add new language pairs by creating a new config
+# file and extending the normalizer.
+language:
+  primary_pair: "hi-en"          # Hindi-English
+  source_scripts:
+    - "roman"                     # Romanized Hindi
+    - "devanagari"                # Devanagari script
+    - "latin"                     # English
+  target_language: "hi"           # Target for translation task
+
+# --- Dataset Configuration ---
+datasets:
+  comi_lingua:
+    hf_repo: "LingoIITGN/COMI-LINGUA"
+    tasks: ["ner", "translation", "pos", "lid", "mli"]
+  sentiment:
+    hf_repo: "l3cube-pune/HingSent"
+    fallback_repos:
+      - "mrinalsingh/Hinglish-Sentiment-Twitter"
+  qa:
+    hf_repo: "ai4bharat/IndicQA"
+    fallback_repos:
+      - "squad_v2"               # English SQuAD for transfer learning
+  intent:
+    synthetic: true              # Will be created via back-translation
+    base_dataset: "atis"         # Base English intent dataset
+
+# --- Preprocessing ---
+preprocessing:
+  max_length: 512
+  lowercase: false               # Preserve case for NER
+  remove_urls: true
+  remove_usernames: true
+  reduce_elongation: true
+  max_elongation: 3              # "goooood" -> "goood"
+  normalize_unicode: true        # NFC normalization
+  min_token_length: 1
+
+# --- Training Defaults ---
+training:
+  seed: 42
+  batch_size: 16
+  eval_batch_size: 32
+  num_epochs: 10
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  max_grad_norm: 1.0
+  fp16: true                     # Mixed precision (set false if no GPU)
+  early_stopping_patience: 3
+  save_total_limit: 3
+  evaluation_strategy: "epoch"
+  logging_steps: 100
+  dataloader_num_workers: 4
+
+# --- Model Defaults ---
+models:
+  transformer_backbones:
+    - "google/muril-base-cased"
+    - "bert-base-multilingual-cased"
+    - "xlm-roberta-base"
+  seq2seq_backbones:
+    - "google/mt5-small"
+    - "ai4bharat/IndicTrans2-en-indic-dist-200M"
+  default_backbone: "google/muril-base-cased"
+  default_seq2seq: "google/mt5-small"
+
+# --- Evaluation ---
+evaluation:
+  bleu_tokenize: "13a"
+  rouge_types: ["rouge1", "rouge2", "rougeL"]
+  ner_scheme: "IOB2"
+  classification_average: "macro"

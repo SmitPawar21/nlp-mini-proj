@@ -1,0 +1,32 @@
+# ==============================================================================
+# Intent Detection Task Configuration
+# ==============================================================================
+# Inherits from base.yaml — only overrides are specified here.
+
+task:
+  name: "intent"
+  type: "classification"
+  description: "Intent detection on code-mixed Hindi-English text"
+
+# --- Dataset ---
+dataset:
+  name: "hinglish_intent"
+  text_column: "text"
+  label_column: "intent"
+  num_labels: 26               # Determined at runtime from dataset
+  synthetic: true                # Created via back-translation from ATIS
+
+# --- Model ---
+model:
+  backbone: "google/muril-base-cased"
+  dropout: 0.1
+
+# --- Training Overrides ---
+training:
+  num_epochs: 15
+  learning_rate: 2.0e-5
+  batch_size: 32
+
+# --- Evaluation ---
+evaluation:
+  metrics: ["accuracy", "precision", "recall", "macro_f1", "confusion_matrix"]
